@@ -1,5 +1,4 @@
 """vercel_app URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
 Examples:
@@ -14,9 +13,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from users import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('example.urls')),
+    path("admin/", admin.site.urls),
+    path("", include("example.urls")),
+    re_path("login", views.LoginAuthUser.as_view(), name="login"),
+    re_path("register", views.RegisterAuthUser.as_view(), name="register"),
+    path("logout", views.logout, name="logout"),
+    path("refresh", views.refresh_jwt, name="refresh_jwt"),
 ]

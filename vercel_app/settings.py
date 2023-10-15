@@ -23,6 +23,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "example",
+    # 3rd party
+    "corsheaders",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -33,6 +38,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # 3rd party
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "vercel_app.urls"
