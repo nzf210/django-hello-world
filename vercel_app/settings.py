@@ -4,12 +4,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from supabase import create_client, Client
+from supabase.lib.client_options import ClientOptions
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DJANGO_DEBUG")
-ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
+DEBUG = bool(os.environ.get("DJANGO_DEBUG"))
+host = os.environ.get("ALLOWED_HOSTS")
+ALLOWED_HOSTS = host.split(",")
 
 # Application definition
 
@@ -39,6 +44,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # 3rd party
     "corsheaders.middleware.CorsMiddleware",
+    # "supabase.middleware.supabase_middleware",
 ]
 
 ROOT_URLCONF = "vercel_app.urls"
@@ -60,7 +66,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "vercel_app.wsgi.app"
-
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -103,18 +108,26 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
+STATIC_URL = "static/"
+if os.environ.get("DJANGO_IS_PRODUCTION"):
+    STATIC_URL = "/static/"
+    print("Running in production")
+
+url: str = os.environ.get("SUPABASE_URL")
+key: str = os.environ.get("SUPABASE_KEY")
+supabase: Client = create_client(
+    url,
+    key,
+    options=ClientOptions(postgrest_client_timeout=30, storage_client_timeout=30),
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
