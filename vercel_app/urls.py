@@ -18,9 +18,9 @@ from users import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("example.urls")),
+    path("auth/", include("users.urls")),
     re_path("login", views.LoginAuthUser.as_view(), name="login"),
-    re_path("register", views.RegisterAuthUser.as_view(), name="register"),
+    re_path("register", views.register_authuser, name="register"),
     path("logout", views.logout, name="logout"),
     path("refresh", views.refresh_jwt, name="refresh_jwt"),
 ]

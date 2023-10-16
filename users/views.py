@@ -17,7 +17,6 @@ from .utils.jwt import TokenManager
 from .utils.validate_req_jwt import validate_access_token
 from .utils.validate_jwt_token import validate_jwt_token
 from django.db import IntegrityError
-from django.http import HttpResponse
 
 
 def validate_email(value: str) -> bool:
@@ -29,6 +28,7 @@ def validate_email(value: str) -> bool:
 
 
 @api_view(["GET"])
+@validate_access_token
 def get_users(request):
     if request.method == "GET":
         users = User.objects.all()
@@ -77,19 +77,19 @@ def get_user(request, pk):
         )
 
 
-class RegisterAuthUser(APIView):
-    def post(self, request):
-        validate_access_token(self)
-        try:
-            serializer = AuthUserSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except IntegrityError as e:
-            return JsonResponse(
-                {"message": f"already exists, error is {str(e)}"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+@api_view(["POST"])
+@validate_jwt_token
+def register_authuser(request):
+    try:
+        serializer = AuthUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except IntegrityError as e:
+        return JsonResponse(
+            {"message": f"already exists, error is {str(e)}"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class LoginAuthUser(APIView):

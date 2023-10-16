@@ -7,7 +7,10 @@ from rest_framework.exceptions import AuthenticationFailed
 def validate_access_token(view_func):
     @wraps(view_func)
     def _wrapped(request, *args, **kwargs):
-        access_token = request.COOKIES.get("access_token")
+        try:
+            access_token = request.COOKIES.get("access_token")
+        except KeyError:
+            raise AuthenticationFailed("Access token not found")
 
         if not access_token:
             raise AuthenticationFailed("Access token not found")

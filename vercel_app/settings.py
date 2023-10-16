@@ -3,12 +3,10 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG")
 ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
@@ -22,12 +20,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "example",
     # 3rd party
     "corsheaders",
     "rest_framework",
     "rest_framework.authtoken",
+    # local
     "users",
+    "example",
 ]
 
 MIDDLEWARE = [

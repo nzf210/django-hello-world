@@ -9,6 +9,7 @@ def validate_jwt_token(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
         token = request.headers.get("Authorization")
+        print(token)
         if not token:
             return JsonResponse(
                 {"message": "Invalid token"}, status=status.HTTP_403_FORBIDDEN
